@@ -15,7 +15,6 @@ $token = "";
 // first, look for an id_token in the post
 if (array_key_exists("id_token", $_POST)) {
 	$token = $_POST["id_token"];
-	unset($_SESSION["id_token"]);
 
 	echo "the token is: $token";
 }
@@ -30,7 +29,12 @@ else {
 if (!(isValid($token))) {
 	echo "<p>the token is empty, invalid, or expired.</p>";
 
+	if (array_key_exists("id_token", $_SESSION)) {
+		unset($_SESSION["id_token"]);
+	}
+
 	echo "<p>you can click <a href = '" . getOauthURL() . "'>here</a> to authenticate.";
+
 	exit;
 }
 else {
@@ -95,12 +99,12 @@ function isValid($token) {
 	  $arr = json_decode($response, TRUE);
 
 	  if ($arr["active"] == "true") {
-	  	echo "<p>the token is valid.</p>";
+	  	echo "<p>the token is valid.";
 	  	$_SESSION["id_token"] = $token;
 	  	return true;
 	  }
 	  else {
-	  	echo "<p>the token is not valid.</p>";
+	  	echo "<p>response not parsed correctly.";
 	  }
 	}
 	return false;
@@ -108,9 +112,8 @@ function isValid($token) {
 
 function showPage() {
 	echo "<p>this is some protected content.</p>";
-	echo "<p>this is the home page.</p>";
-	echo "<p>click <a href = 'anotherPage.php'>here</a> to go to another page.</p>";
-
+	echo "<p>this is another page.</p>";
+	echo "<p>click <a href = 'index.php'>here</a> to go to the home page.</p>";
 }
 
 function isSecure() {
