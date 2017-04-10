@@ -9,7 +9,7 @@ $thisPage = "index.php";
 
 if (isAuthenticated()) {
 	echo "<p>the user is authenticated.</p>";
-	showContent();
+	showContent($thisPage);
 }
 else {
 	authenticate($thisPage);
