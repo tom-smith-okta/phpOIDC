@@ -9,6 +9,15 @@ $thisPage = "index.php";
 
 if (isAuthenticated()) {
 	echo "<p>the user is authenticated.</p>";
+
+	$token_info = json_decode($_SESSION["token_info"]);
+
+	$userName = $token_info->preferred_username;
+
+	// $userName = $_SESSION["token_info"]["preferred_username"];
+
+	echo "<p>Welcome, " . $userName;
+
 	showContent($thisPage);
 }
 else {

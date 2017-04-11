@@ -70,6 +70,12 @@ function isValid($token) {
 	  if ($arr["active"] == "true") {
 	  	// the id_token is valid
 	  	$_SESSION["id_token"] = $token;
+	  	$_SESSION["token_info"] = $response;
+
+//	  	echo "the response is: " . $response;
+
+//	  	exit;
+
 	  	return TRUE;
 	  }
 	  else {
