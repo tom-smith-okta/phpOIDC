@@ -14,7 +14,7 @@ if (file_exists($localKey)) {
 }
 else {
 	$config["client_secret"] = trim(file_get_contents($remoteKey));
-	$config["redirect_uri"] = "http://vishal.atkodemo.com/redirect.php";
+	$config["redirect_uri"] = "http://oidc.atkodemo.com/redirect.php";
 }
 
 // $config["redirect_uri"] = getRedirect_uri();
