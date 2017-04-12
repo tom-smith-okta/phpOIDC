@@ -4,7 +4,7 @@ function showContent($pageName) {
 	$token_info = json_decode($_SESSION["token_info"]);
 	$userName = $token_info->preferred_username;
 
-	$output .= "<p>the user is authenticated.</p>";
+	$output = "<p>the user is authenticated.</p>";
 	$output .= "<p>Welcome, " . $userName . "!</p>";
 
 	$output .= "<p>the page is: " . $pageName . "</p>";
