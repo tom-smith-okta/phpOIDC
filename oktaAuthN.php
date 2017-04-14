@@ -25,12 +25,33 @@ function getOauthURL($state = "someState") {
 	return $oauthURL;
 }
 
-function isAuthenticated() {
+function isAuthenticated($noPrompt = FALSE) {
 	// is there an id_token in the session?
 	// is it valid?
 
+	// $url = "https://tomco.okta.com/oauth2/v1/authorize?prompt=none&response_type=code&client_id=I2wYWlsAoRzcpOJq8ecD&redirect_uri=http://localhost:8888/oidcPHP/index.php&scope=openid%20profile&state=af0ifjsldkj&nonce=n-0S6_WzA2Mj";
+
+	// if ($noPrompt) {
+	// 	// $url = getOauthURL("index.php") . "&prompt=none";
+
+	// 	$id_token = fopen($url);
+
+	// 	echo "the url is: " . $url;
+
+	// 	echo "the response is: " . json_encode($id_token);
+
+	// 	exit;
+	// }
+
+
+
 	if (!(array_key_exists("id_token", $_SESSION))) { return FALSE; }
 	else { return isValid($_SESSION["id_token"]); }
+}
+
+function hasOktaSession() {
+	$url = "https://tomco.okta.com/oauth2/v1/authorize?prompt=none&response_type=id_token&response_mode=form_post&client_id=I2wYWlsAoRzcpOJq8ecD&redirect_uri=http://localhost:8888/oidcPHP/redirect.php&scope=openid%20profile&state=index.php&nonce=n-0S6_WzA2Mj";
+		header("Location: " . $url);
 }
 
 function isValid($token) {

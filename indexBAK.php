@@ -8,23 +8,14 @@ include "utils.php";
 
 $thisPage = "index.php";
 
-if the user has an id_token && id_token is valid: show protected content
-	end
+if (array_key_exists("checked", $_SESSION) {
+	if ($_SESSION["checked"]) {}
+	else { } 
+}
 
-if the user has a valid Okta session: show protected content
-	end
+hasOktaSession();
 
-else
-	if redirect == true: redirect to oidc endpoint with prompt.
-	else: show login link.
-
-
-
-
-
-// hasOktaSession();
-
-// exit;
+exit;
 
 if (isAuthenticated(TRUE)) {
 	showContent($thisPage);
@@ -37,3 +28,12 @@ else {
 }
 
 exit;
+
+possible states at home page
+
+checked and authenticated
+checked and not authenticated
+not checked and authenticated
+not checked and not authenticated
+
+authenticated = has valid id_token

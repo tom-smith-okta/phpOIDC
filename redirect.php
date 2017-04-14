@@ -14,3 +14,9 @@ if (array_key_exists("id_token", $_POST)) {
 		header("Location: " . $_POST["state"]);
 	}
 }
+else {
+
+	$_SESSION["redirect"] = TRUE;
+	// echo "there was no id_token found in the POST";
+	header("Location: index.php");
+}
