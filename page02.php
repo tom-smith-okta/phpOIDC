@@ -8,11 +8,23 @@ include "utils.php";
 
 $thisPage = "page02.php";
 
-if (isAuthenticated()) {
-	showContent($thisPage);
+$authenticated = isAuthenticated($thisPage);
+
+redirect($authenticated, $thisPage, $requireAuthN);
+
+/**********************************************/
+/******** begin page-specific content *********/
+/**********************************************/
+
+if ($authenticated) {
+	$output = getUserInfo();
+	$output .= "<p>the page is: " . $thisPage . "</p>";
 }
 else {
-	authenticate($thisPage);
+	$output = "<p>the user is not authenticated.</p>";
+	$output .= "<p>click <a href = '" . getOauthURL($thisPage) . "'>here</a> to authenticate.</p>";
 }
+
+showPage($output);
 
 exit;

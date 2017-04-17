@@ -1,5 +1,8 @@
 <?php
 
+// when true, this param will force the user to authenticate before loading the page
+$requireAuthN = TRUE;
+
 // Config
 $config["oktaOrg"] = "https://tomco.okta.com/";
 $config["oauthURL"] = $config["oktaOrg"] . "/oauth2/v1/";

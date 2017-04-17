@@ -5,18 +5,14 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 include "config.php";
 
+// The 'checkedForOktaSession' is a boolean that tracks whether
+// we've checked for an Okta session during this page load.
+// Should happen only once per page load
 if (!(array_key_exists("checkedForOktaSession", $_SESSION))) {
 	$_SESSION["checkedForOktaSession"] = 0;
 }
 
-function authenticate($state) {
-	global $config;
-
-	$url = getOauthURL($state);
-
-	header("Location: " . $url);
-}
-
+// builds the OAuth url
 function getOauthURL($state, $prompt = "prompt") {
 	global $config;
 
@@ -31,97 +27,35 @@ function getOauthURL($state, $prompt = "prompt") {
 	return $oauthURL;
 }
 
+function hasToken() {
+	if (array_key_exists("id_token", $_SESSION)) {
+		if (empty($_SESSION["id_token"])) {
+			return FALSE;
+		}
+		else { return TRUE; }
+	}
+	else { return FALSE; }
+}
+
+// check to see if there is an id_token in the local session.
+// if there is an id_token, check to see if it's valid.
+// if there is not a valid id_token in the local session:
+//		check to see whether we've already checked Okta for a central session
+// 		if not, then redirect the user to Okta (without prompting for authn)
 function isAuthenticated($thisPage = "index.php") {
-			// echo "the checked for session val is: " . $_SESSION["checkedForOktaSession"];
 	if (hasToken() && tokenIsValid()) {
 		$_SESSION["checkedForOktaSession"] = 0;
 		return TRUE;
 	}
 	else if ($_SESSION["checkedForOktaSession"] === 0) {
-		// echo "the checked for session val is: " . $_SESSION["checkedForOktaSession"];
 		$_SESSION["checkedForOktaSession"] = 1;
-
-		// echo "the checked for session val is: " . $_SESSION["checkedForOktaSession"];
-
 
 		$url = getOauthURL($thisPage, "noprompt");
 
-		// echo "the url is: " . $url;
-
-		// exit;
-
 		header("Location: $url");
 	}
+	else { return FALSE; /* should never reach this clause */ }
 }
-
-function redirect($authenticated, $thisPage, $requireAuthN = TRUE) {
-	if ($requireAuthN && !($authenticated)) {
-		$url = getOauthURL($thisPage);
-		header("Location: $url");
-	}
-}
-// function isAuthenticated() {
-
-// 	$output = "";
-
-// 	if (hasToken() && tokenIsValid()) {
-// 		$output = "the user has a valid token.";
-// 		return $output;
-// 		// return TRUE;
-// 	}
-// 	else {
-// 		$output = "the user does not have a valid token.";
-// 	}
-
-// 	if (hasOktaSession()) {
-// 		$output .= "<p>the user has an Okta session.";
-// 	}
-// 	else {
-// 		$output .= "<p>the user does not have an Okta session.";
-// 	}
-
-// 	return $output;
-
-	// return FALSE;
-	// is there an id_token in the session?
-	// is it valid?
-
-	// $url = "https://tomco.okta.com/oauth2/v1/authorize?prompt=none&response_type=code&client_id=I2wYWlsAoRzcpOJq8ecD&redirect_uri=http://localhost:8888/oidcPHP/index.php&scope=openid%20profile&state=af0ifjsldkj&nonce=n-0S6_WzA2Mj";
-
-	// if ($noPrompt) {
-	// 	// $url = getOauthURL("index.php") . "&prompt=none";
-
-	// 	$id_token = fopen($url);
-
-	// 	echo "the url is: " . $url;
-
-	// 	echo "the response is: " . json_encode($id_token);
-
-	// 	exit;
-	// }
-// }
-
-function hasOktaSession() { return FALSE; }
-
-function hasToken() {
-	if (!(array_key_exists("id_token", $_SESSION))) {
-		$_SESSION["output"] .= "<p>There is no id_token in the local session.";
-		return FALSE;
-	}
-	else {
-		$_SESSION["output"] .= "<p>There is no id_token in the local session.";
-		return TRUE;
-	}
-}
-
-function tokenIsValid() {
-	return isValid($_SESSION["id_token"]);
-}
-
-// function hasOktaSession() {
-// 	$url = "https://tomco.okta.com/oauth2/v1/authorize?prompt=none&response_type=id_token&response_mode=form_post&client_id=I2wYWlsAoRzcpOJq8ecD&redirect_uri=http://localhost:8888/oidcPHP/redirect.php&scope=openid%20profile&state=index.php&nonce=n-0S6_WzA2Mj";
-// 		header("Location: " . $url);
-// }
 
 function isValid($token) {
 
@@ -159,22 +93,28 @@ function isValid($token) {
 
 	  if ($arr["active"] == "true") {
 	  	// the id_token is valid
-	  	$_SESSION["output"] .= "<p>the id_token is valid.";
 	  	$_SESSION["id_token"] = $token;
 	  	$_SESSION["token_info"] = $response;
-
-//	  	echo "the response is: " . $response;
-
-//	  	exit;
 
 	  	return TRUE;
 	  }
 	  else {
 	  	// the id_token is not valid
-	  	$_SESSION["output"] .= "<p>the id_token is not valid.";
-
 	  	return FALSE;
 	  }
 	}
 	return FALSE;
 }
+
+// redirect the user to an Okta OIDC url with appropriate params
+function redirect($authenticated, $thisPage, $requireAuthN = TRUE) {
+	if ($requireAuthN && !($authenticated)) {
+		$url = getOauthURL($thisPage);
+		header("Location: $url");
+	}
+}
+
+function tokenIsValid() {
+	return isValid($_SESSION["id_token"]);
+}
+
