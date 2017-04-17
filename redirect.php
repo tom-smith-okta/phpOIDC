@@ -3,6 +3,8 @@
 // start a session, if one does not already exist
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
+$_SESSION["output"] .= json_encode($_POST);
+
 // Look for an id_token in the POST from Okta
 // save it to the local session and redirect the user to the
 // url indicated in the "state" param
@@ -16,7 +18,7 @@ if (array_key_exists("id_token", $_POST)) {
 }
 else {
 
-	$_SESSION["redirect"] = TRUE;
+	// $_SESSION["checked"] = TRUE;
 	// echo "there was no id_token found in the POST";
 	header("Location: index.php");
 }

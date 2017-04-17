@@ -5,6 +5,10 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 include "config.php";
 
+if (!(array_key_exists("checkedForOktaSession", $_SESSION))) {
+	$_SESSION["checkedForOktaSession"] = 0;
+}
+
 function authenticate($state) {
 	global $config;
 
@@ -13,7 +17,7 @@ function authenticate($state) {
 	header("Location: " . $url);
 }
 
-function getOauthURL($state = "someState") {
+function getOauthURL($state, $prompt = "prompt") {
 	global $config;
 
 	$nonce = "someRandomValue";
@@ -22,10 +26,63 @@ function getOauthURL($state = "someState") {
 	$oauthURL .= "&scope=openid%20profile&state=" . $state . "&response_mode=form_post&nonce=" . $nonce;
 	$oauthURL .= "&client_id=" . $config["client_id"];
 
+	if ($prompt === "noprompt") { $oauthURL .= "&prompt=none"; }
+
 	return $oauthURL;
 }
 
-function isAuthenticated($noPrompt = FALSE) {
+function isAuthenticated($thisPage = "index.php") {
+			// echo "the checked for session val is: " . $_SESSION["checkedForOktaSession"];
+	if (hasToken() && tokenIsValid()) {
+		$_SESSION["checkedForOktaSession"] = 0;
+		return TRUE;
+	}
+	else if ($_SESSION["checkedForOktaSession"] === 0) {
+		// echo "the checked for session val is: " . $_SESSION["checkedForOktaSession"];
+		$_SESSION["checkedForOktaSession"] = 1;
+
+		// echo "the checked for session val is: " . $_SESSION["checkedForOktaSession"];
+
+
+		$url = getOauthURL($thisPage, "noprompt");
+
+		// echo "the url is: " . $url;
+
+		// exit;
+
+		header("Location: $url");
+	}
+}
+
+function redirect($authenticated, $thisPage, $requireAuthN = TRUE) {
+	if ($requireAuthN && !($authenticated)) {
+		$url = getOauthURL($thisPage);
+		header("Location: $url");
+	}
+}
+// function isAuthenticated() {
+
+// 	$output = "";
+
+// 	if (hasToken() && tokenIsValid()) {
+// 		$output = "the user has a valid token.";
+// 		return $output;
+// 		// return TRUE;
+// 	}
+// 	else {
+// 		$output = "the user does not have a valid token.";
+// 	}
+
+// 	if (hasOktaSession()) {
+// 		$output .= "<p>the user has an Okta session.";
+// 	}
+// 	else {
+// 		$output .= "<p>the user does not have an Okta session.";
+// 	}
+
+// 	return $output;
+
+	// return FALSE;
 	// is there an id_token in the session?
 	// is it valid?
 
@@ -42,17 +99,29 @@ function isAuthenticated($noPrompt = FALSE) {
 
 	// 	exit;
 	// }
+// }
 
+function hasOktaSession() { return FALSE; }
 
-
-	if (!(array_key_exists("id_token", $_SESSION))) { return FALSE; }
-	else { return isValid($_SESSION["id_token"]); }
+function hasToken() {
+	if (!(array_key_exists("id_token", $_SESSION))) {
+		$_SESSION["output"] .= "<p>There is no id_token in the local session.";
+		return FALSE;
+	}
+	else {
+		$_SESSION["output"] .= "<p>There is no id_token in the local session.";
+		return TRUE;
+	}
 }
 
-function hasOktaSession() {
-	$url = "https://tomco.okta.com/oauth2/v1/authorize?prompt=none&response_type=id_token&response_mode=form_post&client_id=I2wYWlsAoRzcpOJq8ecD&redirect_uri=http://localhost:8888/oidcPHP/redirect.php&scope=openid%20profile&state=index.php&nonce=n-0S6_WzA2Mj";
-		header("Location: " . $url);
+function tokenIsValid() {
+	return isValid($_SESSION["id_token"]);
 }
+
+// function hasOktaSession() {
+// 	$url = "https://tomco.okta.com/oauth2/v1/authorize?prompt=none&response_type=id_token&response_mode=form_post&client_id=I2wYWlsAoRzcpOJq8ecD&redirect_uri=http://localhost:8888/oidcPHP/redirect.php&scope=openid%20profile&state=index.php&nonce=n-0S6_WzA2Mj";
+// 		header("Location: " . $url);
+// }
 
 function isValid($token) {
 
@@ -84,12 +153,13 @@ function isValid($token) {
 	curl_close($curl);
 
 	if ($err) {
-	  echo "cURL Error #:" . $err;
+		$_SESSION["output"] .= "<p>cURL Error #:" . $err;
 	} else {
 	  $arr = json_decode($response, TRUE);
 
 	  if ($arr["active"] == "true") {
 	  	// the id_token is valid
+	  	$_SESSION["output"] .= "<p>the id_token is valid.";
 	  	$_SESSION["id_token"] = $token;
 	  	$_SESSION["token_info"] = $response;
 
@@ -101,6 +171,8 @@ function isValid($token) {
 	  }
 	  else {
 	  	// the id_token is not valid
+	  	$_SESSION["output"] .= "<p>the id_token is not valid.";
+
 	  	return FALSE;
 	  }
 	}
