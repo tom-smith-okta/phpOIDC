@@ -14,6 +14,47 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <!--/bootstrap-->
 
+<script>
+
+window.onload = function() { setNav(); };
+
+function setNav() {
+
+  var html = "<ul class='nav navbar-nav'>";
+
+  html += getLink("index.php", "Home");
+  html += getLink("page01.php", "Page 1");
+  html += getLink("page02.php", "Page 2");
+
+  html += "<li><a href='endSession.php'>Log out</a></li>";
+  html += "<li><a target = '_new' href='https://www.websequencediagrams.com/files/render?link=kzUyT8YXBWzb9hqMlI0j'>Sequence diagram</a></li>";
+
+  html += "</ul>";
+
+  $("#navbar").html(html);
+}
+
+function getLink(fileName, name) {
+
+  var path = window.location.pathname;
+  var page = path.split("/").pop();
+
+  var retVal = "";
+
+  if (fileName === page) {
+    retVal = "<li class = 'active'>";
+  }
+  else {
+    retVal = "<li>";
+  }
+
+  retVal += "<a href='" + fileName + "'>" + name + "</a></li>";
+
+  return retVal;
+}
+
+</script>
+
 </head>
 
 <body>
@@ -33,14 +74,6 @@
             <a class="navbar-brand" href="#">Okta OIDC</a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="index.php">Home</a></li>
-              <li><a href="page01.php">Page 1</a></li>
-              <li><a href="page02.php">Page 2</a></li>
-              <li><a href="endSession.php">Log out</a></li>
-              <li><a target = "_new" href="https://www.websequencediagrams.com/files/render?link=kzUyT8YXBWzb9hqMlI0j">Sequence diagram</a></li>
-
-            </ul>
           </div>
         </div>
       </nav>
