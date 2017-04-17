@@ -23,7 +23,7 @@ if ($authenticated) {
 	$output .= "<p>the page is: " . $thisPage . "</p>";
 }
 else {
-	$output = "<p>the user is not authenticated.</p>";
+	$output = "<p>the user is <b>not</b> authenticated.</p>";
 	$output .= "<p>click <a href = '" . getOauthURL($thisPage) . "'>here</a> to authenticate.</p>";
 }
 
