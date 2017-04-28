@@ -1,6 +1,6 @@
 {
 	"oktaOrg": "https://tomco.okta.com/",
-	"oauthBaseURL": "/oauth2/v1/",
+	"oauthBasePath": "oauth2/v1/",
 
 	"OIDCclients": [
 		{ "default": [

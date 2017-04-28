@@ -5,21 +5,30 @@ if (!($json = file_get_contents("config.json"))) {
 	exit;
 }
 else {
-	if (!($obj = json_decode($json))) {
+	if (!($config = json_decode($json, TRUE))) {
 		echo "could not json decode the config.json file.";
 		exit;
 	}
-	else {
-		echo "the okta org is: " . $obj->oktaOrg;
-	}
-// echo "the json is: " . $json;
-
 }
 
+$config["oauthURL"] = $config["oktaOrg"] . $config["oauthBasePath"];
+
+set_client_id_and_secret();
+
+
+echo "the okta org is: " . $config["oauthURL"];
 
 exit;
 
+function set_client_id_and_secret() {
 
+	echo "in the function";
+
+	foreach ($config["OIDCclients"] as $client=>$values) {
+		echo "<p>the name of the client is: " . $client;
+	}
+	// if (empty($config["OIDCclients"]["default"]["client_id"]) || empty(($config["OIDCclients"]["default"]["client_secret"])))
+}
 
 
 
