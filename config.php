@@ -1,5 +1,28 @@
 <?php
 
+if (!($json = file_get_contents("config.json"))) {
+	echo "could not open the config.json file.";
+	exit;
+}
+else {
+	if (!($obj = json_decode($json))) {
+		echo "could not json decode the config.json file.";
+		exit;
+	}
+	else {
+		echo "the okta org is: " . $obj->oktaOrg;
+	}
+// echo "the json is: " . $json;
+
+}
+
+
+exit;
+
+
+
+
+
 // when true, this param will force the user to authenticate before loading the page
 $requireAuthN = TRUE;
 

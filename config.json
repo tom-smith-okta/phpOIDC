@@ -1,0 +1,21 @@
+{
+	"oktaOrg": "https://tomco.okta.com/",
+	"oauthBaseURL": "/oauth2/v1/",
+
+	"OIDCclients": [
+		{ "default": [
+			{ "client_id": "" },
+			{ "client_secret": "" }
+		]},
+		{ "local": [
+			{ "client_id": "I2wYWlsAoRzcpOJq8ecD" },
+			{ "client_secret": "/Users/tomsmith/keys/oidcSecret.txt" }
+		]},
+		{ "remote": [
+			{ "client_id": "SV3N5CnEAMkOV4tUkIs6" },
+			{ "client_secret": "/usr/local/keys/vishalSecret.txt" }
+		]}
+	],
+
+	"requireAuthN": true
+}
