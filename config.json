@@ -2,19 +2,17 @@
 	"oktaOrg": "https://tomco.okta.com/",
 	"oauthBasePath": "oauth2/v1/",
 
-	"OIDCclients": [
-		{ "default": [
-			{ "client_id": "" },
-			{ "client_secret": "" }
-		]},
-		{ "local": [
-			{ "client_id": "I2wYWlsAoRzcpOJq8ecD" },
-			{ "client_secret": "/Users/tomsmith/keys/oidcSecret.txt" }
-		]},
-		{ "remote": [
-			{ "client_id": "SV3N5CnEAMkOV4tUkIs6" },
-			{ "client_secret": "/usr/local/keys/vishalSecret.txt" }
-		]}
+	"envs": [
+		{ "name": "local",
+		  "client_id": "I2wYWlsAoRzcpOJq8ecD",
+		  "client_secret_path": "/Users/tomsmith/keys/oidcSecret.txt",
+		  "redirect_uri": "http://localhost:8888/oidcPHP/redirect.php"
+		},
+		{ "name": "remote",
+		  "client_id": "SV3N5CnEAMkOV4tUkIs6",
+		  "client_secret_path": "/usr/local/keys/vishalSecret.txt",
+		  "redirect_uri": "http://oidc.atkodemo.com/redirect.php"
+		}
 	],
 
 	"requireAuthN": true

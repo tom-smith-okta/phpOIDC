@@ -3,11 +3,11 @@
 // start a session, if one does not already exist
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
+include "utils.php";
 include "config.php";
 
 // revoke the Okta id_token
 if (array_key_exists("id_token", $_SESSION)) {
-	// echo "<p>the token is: " . $_SESSION["id_token"];
 	revokeToken($_SESSION["id_token"]);
 }
 

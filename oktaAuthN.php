@@ -3,7 +3,7 @@
 // start a session, if one does not already exist
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
-include "config.php";
+// include "config.php";
 
 // The 'checkedForOktaSession' is a boolean that tracks whether
 // we've checked for an Okta session during this page load.
@@ -108,10 +108,20 @@ function isValid($token) {
 
 // redirect the user to an Okta OIDC url with appropriate params
 function redirect($authenticated, $thisPage, $requireAuthN = TRUE) {
-	if ($requireAuthN && !($authenticated)) {
+
+	echo "the values are: " . $authenticated . ", " . $thisPage . ", " . $requireAuthN;
+	exit;
+	if (empty($requireAuthN)) { $requireAuthN = TRUE; }
+	if ($authenticated != TRUE && $requireAuthN != FALSE) {
 		$url = getOauthURL($thisPage);
 		header("Location: $url");
 	}
+	// echo "the value of requireAuthN is: " . $requireAuthN;
+	// echo "the value of authenticated is: " . $authenticated;
+	// if ($requireAuthN && !($authenticated)) {
+	// 	$url = getOauthURL($thisPage);
+	// 	header("Location: $url");
+	// }
 }
 
 function tokenIsValid() {

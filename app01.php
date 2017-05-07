@@ -5,12 +5,16 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 include "oktaAuthN.php";
 include "utils.php";
+include "config.php";
 
-$thisPage = "page01.php";
+// assign the current URL to the state var
+// I am using the built-in PHP constant for filename
+// but this could be a full URL
+$state = basename(__FILE__);
 
-$authenticated = isAuthenticated($thisPage);
+$authenticated = isAuthenticated($state);
 
-redirect($authenticated, $thisPage, $requireAuthN);
+redirect($authenticated, $state);
 
 /**********************************************/
 /******** begin page-specific content *********/
@@ -18,11 +22,11 @@ redirect($authenticated, $thisPage, $requireAuthN);
 
 if ($authenticated) {
 	$output = getUserInfo();
-	$output .= "<p>the page is: " . $thisPage . "</p>";
+	$output .= "<p>the page is: " . $state . "</p>";
 }
 else {
 	$output = "<p>the user is not authenticated.</p>";
-	$output .= "<p>click <a href = '" . getOauthURL($thisPage) . "'>here</a> to authenticate.</p>";
+	$output .= "<p>click <a href = '" . getOauthURL($state) . "'>here</a> to authenticate.</p>";
 }
 
 showPage($output);

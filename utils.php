@@ -36,6 +36,29 @@ function isSecure() {
 		|| $_SERVER['SERVER_PORT'] == 443;
 }
 
+function set_client_id_and_secret() {
+
+	global $config;
+
+	foreach ($config["envs"] as $env) {
+
+		if (file_exists($env["client_secret_path"])) {
+			if ($config["client_secret"] = trim(file_get_contents($env["client_secret_path"]))) {
+				$config["client_id"] = $env["client_id"];
+				$config["redirect_uri"] = $env["redirect_uri"];
+				return;
+			}
+			else {
+				echo "cannot open the client secret file at " . $env["client_secret_path"];
+				exit; 
+			}
+		}
+	}
+
+	echo "not able to find a valid client secret.";
+	exit;
+}
+
 function showPage($output) {
 
 	$page = file_get_contents("html/template.html");
