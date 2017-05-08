@@ -39,23 +39,32 @@ function hasToken() {
 
 // check to see if there is an id_token in the local session.
 // if there is an id_token, check to see if it's valid.
-// if there is not a valid id_token in the local session:
-//		check to see whether we've already checked Okta for a central session
-// 		if not, then redirect the user to Okta (without prompting for authn)
-function isAuthenticated($thisPage = "index.php") {
-	if (hasToken() && tokenIsValid()) {
-		$_SESSION["checkedForOktaSession"] = 0;
-		return TRUE;
-	}
-	else if ($_SESSION["checkedForOktaSession"] === 0) {
+function isAuthenticated() {
+	return (hasToken() && isValid($_SESSION["id_token"]));
+}
+
+function checkForOktaSession($state) {
+
+	$_SESSION["log"][] = "the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
+
+	if ($_SESSION["checkedForOktaSession"] === 0) {
+
 		$_SESSION["checkedForOktaSession"] = 1;
 
-		$url = getOauthURL($thisPage, "noprompt");
+		$_SESSION["log"][] = "the value of checkedForOktaSession is now 1.";
+
+		$url = getOauthURL($state, "noprompt");
+
+		$_SESSION["log"][] = "the url is: " . $url;
 
 		header("Location: $url");
 	}
-	else { return FALSE; /* should never reach this clause */ }
+	else {
+		$_SESSION["log"][] = "we have already checked for an Okta session.";
+	}
 }
+
+
 
 function isValid($token) {
 
@@ -107,24 +116,11 @@ function isValid($token) {
 }
 
 // redirect the user to an Okta OIDC url with appropriate params
-function redirect($authenticated, $thisPage, $requireAuthN = TRUE) {
+function redirect($state) {
 
-	echo "the values are: " . $authenticated . ", " . $thisPage . ", " . $requireAuthN;
-	exit;
-	if (empty($requireAuthN)) { $requireAuthN = TRUE; }
-	if ($authenticated != TRUE && $requireAuthN != FALSE) {
-		$url = getOauthURL($thisPage);
-		header("Location: $url");
-	}
-	// echo "the value of requireAuthN is: " . $requireAuthN;
-	// echo "the value of authenticated is: " . $authenticated;
-	// if ($requireAuthN && !($authenticated)) {
-	// 	$url = getOauthURL($thisPage);
-	// 	header("Location: $url");
-	// }
+	$url = getOauthURL($state);
+
+	$_SESSION["log"][] = "the user is being redirected to " . $url;
+
+	header("Location: $url");
 }
-
-function tokenIsValid() {
-	return isValid($_SESSION["id_token"]);
-}
-

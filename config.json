@@ -15,5 +15,6 @@
 		}
 	],
 
-	"requireAuthN": true
+	"requireAuthN": true,
+	"checkForOktaSession": true
 }
