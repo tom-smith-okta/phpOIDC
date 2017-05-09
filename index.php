@@ -15,6 +15,7 @@ $state = basename(__FILE__);
 // Does this page require authentication?
 $requireAuthN = 0;
 
+
 authenticate($state, $requireAuthN);
 
 $authenticated = isAuthenticated();

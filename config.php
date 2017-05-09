@@ -11,6 +11,8 @@ else {
 	}
 }
 
+set_client_id_and_secret();
+
 $config["oauthURL"] = $config["oktaOrg"] . $config["oauthBasePath"];
 
-set_client_id_and_secret();
+$config["logoutURL"] = $config["oktaOrg"] . "login/signout?fromURI=" . $config["logout_page"];

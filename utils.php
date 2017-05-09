@@ -46,6 +46,7 @@ function set_client_id_and_secret() {
 			if ($config["client_secret"] = trim(file_get_contents($env["client_secret_path"]))) {
 				$config["client_id"] = $env["client_id"];
 				$config["redirect_uri"] = $env["redirect_uri"];
+				$config["logout_page"] = $env["logout_page"];
 				return;
 			}
 			else {
