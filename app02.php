@@ -12,22 +12,17 @@ include "config.php";
 // but this could be a full URL
 $state = basename(__FILE__);
 
-$authenticated = isAuthenticated($state);
+// Does this page require authentication?
+$requireAuthN = 1;
 
-redirect($authenticated, $state);
+authenticate($state, $requireAuthN);
 
 /**********************************************/
 /******** begin page-specific content *********/
 /**********************************************/
 
-if ($authenticated) {
-	$output = getUserInfo();
-	$output .= "<p>the page is: " . $state . "</p>";
-}
-else {
-	$output = "<p>the user is not authenticated.</p>";
-	$output .= "<p>click <a href = '" . getOauthURL($state) . "'>here</a> to authenticate.</p>";
-}
+$output = getUserInfo();
+$output .= "<p>the page is: " . $state . "</p>";
 
 showPage($output);
 

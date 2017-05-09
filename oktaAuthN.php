@@ -12,6 +12,39 @@ if (!(array_key_exists("checkedForOktaSession", $_SESSION))) {
 	$_SESSION["checkedForOktaSession"] = 0;
 }
 
+function authenticate($state, $requireAuthN = 1) {
+	global $config;
+
+	// Is the user authenticated?
+	$authenticated = isAuthenticated();
+
+	if ($authenticated != TRUE) {
+
+		$_SESSION["log"][] = "user is not authenticated.";
+
+		if ($config["checkForOktaSession"] === TRUE) {
+
+			$_SESSION["log"][] = "config wants to check for an okta session...";
+			$_SESSION["log"][] = "the state is: " . $state;
+
+			checkForOktaSession($state);
+		}
+	}
+	else { $_SESSION["log"][] = "the user is authenticated"; }
+
+	// if the page requires authentication and the user is not
+	// authenticated, bounce them to the authentication screen
+
+	if ($requireAuthN === 1 && $authenticated != TRUE) {
+
+		$_SESSION["log"][] = "this page requires authentication, and the user is not authenticated.";
+
+		$_SESSION["log"][] = "redirecting...";
+
+		redirect($state);
+	}
+}
+
 // builds the OAuth url
 function getOauthURL($state, $prompt = "prompt") {
 	global $config;
