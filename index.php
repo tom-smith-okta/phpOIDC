@@ -20,17 +20,27 @@ authenticate($state, $requireAuthN);
 
 $authenticated = isAuthenticated();
 
+// echo json_encode($_SESSION);
+
+	// $output = getUserInfo();
+	// $output .= "<p>the page is: " . $state . "</p>";
+
+
 /**********************************************/
 /******** begin page-specific content *********/
 /**********************************************/
 
+$output = "";
+
 if ($authenticated) {
-	$output = getUserInfo();
+	$output .= getUserInfo();
 	$output .= "<p>the page is: " . $state . "</p>";
 }
 else {
-	$output = "<p>the user is <b>not</b> authenticated.</p>";
+	$output .= "<p>the user is <b>not</b> authenticated.</p>";
 	$output .= "<p>click <a href = '" . getOauthURL($state) . "'>here</a> to authenticate.</p>";
+
+	$output .= json_encode($_SESSION);
 }
 
 showPage($output);

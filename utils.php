@@ -25,6 +25,7 @@ function getUserInfo() {
 
 	$output = "<p>the user is authenticated.</p>";
 	$output .= "<p>Welcome, <b>" . $userName . "</b>!</p>";
+	$output .= "<p>the token info is: " . json_encode($_SESSION["token_info"]);
 
 	return $output;
 
@@ -61,10 +62,12 @@ function set_client_id_and_secret() {
 }
 
 function showPage($output) {
+	global $config;
 
 	$page = file_get_contents("html/template.html");
 
 	$page = str_replace("%--authnstatus--%", $output, $page);
+	$page = str_replace("%--oktaTenant--%", $config["oktaOrg"], $page);
 
 	echo $page;
 

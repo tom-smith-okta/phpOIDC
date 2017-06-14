@@ -27,10 +27,18 @@ function authenticate($state, $requireAuthN = 1) {
 			$_SESSION["log"][] = "config wants to check for an okta session...";
 			$_SESSION["log"][] = "the state is: " . $state;
 
+// echo "<p>user is not authenticated." ."\n";
+// echo "<p>the value for session is: " . json_encode($_SESSION["checkedForOktaSession"]) . "\n";
+
+// echo "<p>the value for session is: " . json_encode($_SESSION) . "\n";
+
 			checkForOktaSession($state);
 		}
 	}
-	else { $_SESSION["log"][] = "the user is authenticated"; }
+	else { 
+		$_SESSION["log"][] = "the user is authenticated";
+		$_SESSION["checkedForOktaSession"] = 0;
+	}
 
 	// if the page requires authentication and the user is not
 	// authenticated, bounce them to the authentication screen
@@ -78,26 +86,41 @@ function isAuthenticated() {
 
 function checkForOktaSession($state) {
 
+	$_SESSION["log"][] = "now in the checkForOktaSession function.";
 	$_SESSION["log"][] = "the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
+
+	// echo "<p>the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
 
 	if ($_SESSION["checkedForOktaSession"] === 0) {
 
+		// echo "<p>in the right clause";
+
 		$_SESSION["checkedForOktaSession"] = 1;
 
-		$_SESSION["log"][] = "the value of checkedForOktaSession is now 1.";
+		$_SESSION["log"][] = "we're about to redirect the user to Okta to check for a session, so we're going to set the value of checkedForOktaSession to 1.";
 
 		$url = getOauthURL($state, "noprompt");
 
-		$_SESSION["log"][] = "the url is: " . $url;
+		// echo "<p>the url is: " . $url;
 
-		header("Location: $url");
+		$_SESSION["log"][] = "the OAuth url is: " . $url;
+
+		$headerString = "Location: " . $url;
+
+		// echo "<p>the header string is: " . $headerString;
+
+		// exit;
+
+		$_SESSION["log"][] = "sending the user to the Okta OAuth URL...";
+
+		header($headerString);
 	}
 	else {
 		$_SESSION["log"][] = "we have already checked for an Okta session.";
+
+		// echo "we have already checked for an okta session.";
 	}
 }
-
-
 
 function isValid($token) {
 

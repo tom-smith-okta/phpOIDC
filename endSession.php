@@ -14,13 +14,9 @@ if (array_key_exists("id_token", $_SESSION)) {
 // kill the local session
 session_unset();
 
-header("Location: https://tomco.okta.com/login/signout?fromURI=http://localhost:8888/oidcPHP/");
+$redirectString = "Location: " . $config["logoutURL"];
 
-// header("Location: https://tomco.okta.com/login/signout?fromURI=https://tomco.okta.com/home/bookmark/0oa27zqgesIYQxsSb1t7/2557");
-
-
-// https://tomco.okta.com/home/bookmark/0oa27zqgesIYQxsSb1t7/2557
-
+header($redirectString);
 
 exit;
 

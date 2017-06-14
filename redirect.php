@@ -5,6 +5,12 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 $_SESSION["log"][] = "in the redirect script.";
 
+$_SESSION["log"][] = "the post from Okta is: " . json_encode($_POST);
+
+// echo "in the redirect script. ";
+
+// exit;
+
 // Look for an id_token in the POST from Okta
 // save it to the local session and redirect the user to the
 // url indicated in the "state" param
@@ -19,6 +25,6 @@ if (array_key_exists("id_token", $_POST)) {
 	}
 }
 else {
-	$_SESSION["log"][] = "could not find and id_token in the POST.";
+	$_SESSION["log"][] = "could not find an id_token in the POST.";
 	header("Location: index.php");
 }
