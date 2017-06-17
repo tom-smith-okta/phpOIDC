@@ -89,8 +89,6 @@ function checkForOktaSession($state) {
 	$_SESSION["log"][] = "now in the checkForOktaSession function.";
 	$_SESSION["log"][] = "the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
 
-	// echo "<p>the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
-
 	if ($_SESSION["checkedForOktaSession"] === 0) {
 
 		// echo "<p>in the right clause";
