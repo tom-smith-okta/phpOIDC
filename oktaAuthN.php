@@ -80,45 +80,89 @@ function hasToken() {
 
 // check to see if there is an id_token in the local session.
 // if there is an id_token, check to see if it's valid.
-function isAuthenticated() {
-	return (hasToken() && isValid($_SESSION["id_token"]));
+function isAuthenticated($state) {
+	global $config;
+
+	if (hasToken() && isValid($_SESSION["id_token"])) { return TRUE; }
+
+	else {
+
+		if ($config["allowIDPinit"] === TRUE) {
+
+			$now = time();
+
+			$elapsedSecs = $now - $_SESSION["checkedForOktaSession"];
+
+			// echo "elapsed seconds are: " . $elapsedSecs;
+
+			if ($elapsedSecs > 3) {
+				$_SESSION["checkedForOktaSession"] = time();
+
+				$_SESSION["log"][] = "the state is: " . $state;
+
+				$_SESSION["log"][] = "I am going to check for an Okta session.";
+
+				// echo "<p>I am going to check for an Okta session.";
+
+				$url = getOauthURL($state, "noprompt");
+
+				// echo "<p>the url is: " . $url;
+
+				// exit;
+
+				$_SESSION["log"][] = "the OAuth url is: " . $url;
+
+				$headerString = "Location: " . $url;
+
+				// echo "<p>the header string is: " . $headerString;
+
+				$_SESSION["log"][] = "sending the user to the Okta OAuth URL...";
+
+				header($headerString);
+			}
+		}
+	}
 }
 
 function checkForOktaSession($state) {
 
-	$_SESSION["log"][] = "now in the checkForOktaSession function.";
-	$_SESSION["log"][] = "the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
-
-	if ($_SESSION["checkedForOktaSession"] === 0) {
-
-		// echo "<p>in the right clause";
-
-		$_SESSION["checkedForOktaSession"] = 1;
-
-		$_SESSION["log"][] = "we're about to redirect the user to Okta to check for a session, so we're going to set the value of checkedForOktaSession to 1.";
-
-		$url = getOauthURL($state, "noprompt");
-
-		// echo "<p>the url is: " . $url;
-
-		$_SESSION["log"][] = "the OAuth url is: " . $url;
-
-		$headerString = "Location: " . $url;
-
-		// echo "<p>the header string is: " . $headerString;
-
-		// exit;
-
-		$_SESSION["log"][] = "sending the user to the Okta OAuth URL...";
-
-		header($headerString);
-	}
-	else {
-		$_SESSION["log"][] = "we have already checked for an Okta session.";
-
-		// echo "we have already checked for an okta session.";
-	}
 }
+
+// function checkForOktaSession($state) {
+
+// 	$_SESSION["log"][] = "now in the checkForOktaSession function.";
+// 	$_SESSION["log"][] = "the value of checkedForOktaSession is " . $_SESSION["checkedForOktaSession"];
+
+// 	if ($_SESSION["checkedForOktaSession"] === 0) {
+
+// 		// echo "<p>in the right clause";
+
+// 		$_SESSION["checkedForOktaSession"] = 1;
+
+// 		$_SESSION["log"][] = "we're about to redirect the user to Okta to check for a session, so we're going to set the value of checkedForOktaSession to 1.";
+
+// 		$url = getOauthURL($state, "noprompt");
+
+// 		// echo "<p>the url is: " . $url;
+
+// 		$_SESSION["log"][] = "the OAuth url is: " . $url;
+
+// 		$headerString = "Location: " . $url;
+
+// 		// echo "<p>the header string is: " . $headerString;
+
+// 		// exit;
+
+// 		$_SESSION["log"][] = "sending the user to the Okta OAuth URL...";
+
+// 		header($headerString);
+// 	}
+// 	else {
+// 		$_SESSION["log"][] = "we have already checked for an Okta session.";
+
+// 		// echo "we have already checked for an okta session.";
+// 	}
+// }
 
 function isValid($token) {
 

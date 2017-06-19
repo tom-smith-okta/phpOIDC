@@ -28,11 +28,11 @@ include "init.php";
 // assign the current URL to the state var
 // I am using the built-in PHP constant for filename
 // but this could be a full URL
-$state = basename(__FILE__);
+// $state = basename(__FILE__);
 
-$authenticated = isAuthenticated($state);
+$authenticated = isAuthenticated(basename(__FILE__));
 
-// checkForOktaSession($state)
+// checkForOktaSession($state);
 
 // if (!($authenticated) && $config["allowIDPinit"] === TRUE && $_SESSION["checkedForOktaSession"] === 0)
 

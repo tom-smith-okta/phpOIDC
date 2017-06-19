@@ -20,11 +20,12 @@ if (array_key_exists("id_token", $_POST)) {
 
 	$_SESSION["id_token"] = $_POST["id_token"];
 
-	if (array_key_exists("state", $_POST)) {
-		header("Location: " . $_POST["state"]);
-	}
 }
+
+if (array_key_exists("state", $_POST)) {
+	header("Location: " . $_POST["state"]);
+}
+
 else {
-	$_SESSION["log"][] = "could not find an id_token in the POST.";
 	header("Location: index.php");
 }
