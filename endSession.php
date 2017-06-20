@@ -10,15 +10,10 @@ if (array_key_exists("id_token", $_SESSION)) {
 	revokeToken($_SESSION["id_token"]);
 }
 
-echo "<p>the id_token in the session is: " . $_SESSION["id_token"];
-
-
 // kill the local session
 session_unset();
 
-echo "<p>the id_token in the session is: " . $_SESSION["id_token"];
-
-$redirectString = "Location: " . $config["logout_page"];
+$redirectString = "Location: " . $config["logoutURL"];
 
 header($redirectString);
 
@@ -31,8 +26,6 @@ function revokeToken($token) {
 
 	// can also make this call with header-based auth
 	$url = $config["oauthURL"] . "revoke?token=" . $token . "&client_id=" . $config["client_id"] . "&client_secret=" . $config["client_secret"];
-
-	echo "<p>the url is: " . $url;
 
 	curl_setopt_array($curl, array(
 	  CURLOPT_URL => $url,
@@ -51,8 +44,6 @@ function revokeToken($token) {
 
 	$response = curl_exec($curl);
 	$err = curl_error($curl);
-
-	echo "<p>the resonse is: " . $response;
 
 	curl_close($curl);
 

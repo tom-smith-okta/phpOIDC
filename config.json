@@ -16,7 +16,7 @@
 		"logout_page": "http://oidc.atkodemo.com/"
 	}],
 
-	"requireAuthN": true,
+	"requireAuthN": 1,
 	"allowIDPinit": true,
 	"pause": 3
 }

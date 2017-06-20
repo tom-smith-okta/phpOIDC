@@ -11,7 +11,7 @@ include "init.php";
 // Does this page require authentication?
 // If no value is provided here then pick up the default value
 // from the config file
-$requireAuthN = FALSE;
+$requireAuthN = 0;
 
 // assign the current URL to the state var
 // I am using the built-in PHP constant for filename

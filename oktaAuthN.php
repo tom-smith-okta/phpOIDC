@@ -6,9 +6,9 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 function bounceUser($state, $authenticated, $requireAuthN) {
 	global $config;
 
-	if (empty($requireAuthN)) { $requireAuthN = $config["requireAuthN"]; }
+	if (!(isset($requireAuthN))) { $requireAuthN = $config["requireAuthN"]; }
 
-	if ($requireAuthN == TRUE && $authenticated == FALSE) {
+	if ($requireAuthN == 1 && $authenticated == FALSE) {
 		redirect($state);
 	}
 }
