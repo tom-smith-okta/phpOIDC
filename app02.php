@@ -1,21 +1,33 @@
 <?php
 
-// start a session, if one does not already exist
+/// start a session, if one does not already exist
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
-include "oktaAuthN.php";
-include "utils.php";
-include "config.php";
+/**********************************************/
+/******** begin Okta auth logic ***************/
+/**********************************************/
+include "init.php";
+
+// Does this page require authentication?
+// If no value is provided here then pick up the default value
+// from the config file
+$requireAuthN = TRUE;
 
 // assign the current URL to the state var
 // I am using the built-in PHP constant for filename
 // but this could be a full URL
 $state = basename(__FILE__);
 
-// Does this page require authentication?
-$requireAuthN = 1;
+$authenticated = isAuthenticated($state);
 
-authenticate($state, $requireAuthN);
+// redirect the user to the Okta login page
+// if they are not authenticated and this page
+// requires authentication
+bounceUser($state, $authenticated, $requireAuthN);
+
+/**********************************************/
+/******** end Okta auth logic *****************/
+/**********************************************/
 
 /**********************************************/
 /******** begin page-specific content *********/
