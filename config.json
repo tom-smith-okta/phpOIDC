@@ -11,7 +11,7 @@
 	}, {
 		"name": "remote",
 		"client_id": "SV3N5CnEAMkOV4tUkIs6",
-		"client_secret_path": "/usr/local/keys/vishalSecret.txt",
+		"client_secret_path": "",
 		"redirect_uri": "http://oidc.atkodemo.com/redirect.php",
 		"logout_page": "http://oidc.atkodemo.com/"
 	}],
