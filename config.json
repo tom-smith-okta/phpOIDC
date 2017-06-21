@@ -1,22 +1,22 @@
 {
-	"oktaOrg": "https://tomco.okta.com/",
-	"oauthBasePath": "oauth2/v1/",
+        "oktaOrg": "https://public.oktapreview.com/",
+        "oauthBasePath": "oauth2/v1/",
 
-	"envs": [{
-		"name": "local",
-		"client_id": "I2wYWlsAoRzcpOJq8ecD",
-		"client_secret_path": "/Users/tomsmith/keys/oidcSecret.txt",
-		"redirect_uri": "http://localhost:8888/oidcPHP/redirect.php",
-		"logout_page": "http://localhost:8888/oidcPHP/"
-	}, {
-		"name": "remote",
-		"client_id": "SV3N5CnEAMkOV4tUkIs6",
-		"client_secret_path": "",
-		"redirect_uri": "http://oidc.atkodemo.com/redirect.php",
-		"logout_page": "http://oidc.atkodemo.com/"
-	}],
+        "envs": [{
+                "name": "local",
+                "client_id": "Kee8wsoHaYmpvKJPUS0J",
+                "client_secret_path": "/Users/tomsmith/keys/public.oktapreview.com.client_secret.txt",
+                "redirect_uri": "http://localhost:8888/oidcPHP/redirect.php",
+                "logout_page": "http://localhost:8888/oidcPHP/"
+        }, {
+                "name": "remote",
+                "client_id": "ORnGC8tTnzlISfWghL2C",
+                "client_secret_path": "",
+                "redirect_uri": "http://oidc.atkodemo.com/redirect.php",
+                "logout_page": "http://oidc.atkodemo.com/"
+        }],
 
-	"requireAuthN": 1,
-	"allowIDPinit": true,
-	"pause": 3
+        "requireAuthN": 1,
+        "allowIDPinit": true,
+        "pause": 3
 }

@@ -35,4 +35,8 @@ Pseudo-code / Logic for authN sequence
 			// If no:
 				// redirect the user to the Okta login screen (with noprompt=false)
 
-
+TO-DO
+* Fix formatting of Readme doc!
+* implement local validation of id_token
+* generate & check nonce
+* fold okta org etc. into env definition
