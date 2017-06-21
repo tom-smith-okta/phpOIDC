@@ -7,16 +7,12 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 // save it to the local session and redirect the user to the
 // url indicated in the "state" param
 if (array_key_exists("id_token", $_POST)) {
-
 	$_SESSION["id_token"] = $_POST["id_token"];
+}
 
-	if (array_key_exists("state", $_POST)) {
-		header("Location: " . $_POST["state"]);
-	}
+if (array_key_exists("state", $_POST)) {
+	header("Location: " . $_POST["state"]);
 }
 else {
-
-	// $_SESSION["checked"] = TRUE;
-	// echo "there was no id_token found in the POST";
 	header("Location: index.php");
 }

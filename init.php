@@ -1,5 +1,10 @@
 <?php
 
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+include "oktaAuthN.php";
+include "utils.php";
+
 if (!($json = file_get_contents("config.json"))) {
 	echo "could not open the config.json file.";
 	exit;

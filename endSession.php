@@ -3,23 +3,23 @@
 // start a session, if one does not already exist
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
-include "config.php";
+include "init.php";
 
 // revoke the Okta id_token
 if (array_key_exists("id_token", $_SESSION)) {
-	// echo "<p>the token is: " . $_SESSION["id_token"];
 	revokeToken($_SESSION["id_token"]);
 }
 
 // kill the local session
 session_unset();
 
-header("Location: https://tomco.okta.com/login/signout?fromURI=http://localhost:8888/oidcPHP/index.php");
+$redirectString = "Location: " . $config["logoutURL"];
+
+header($redirectString);
 
 exit;
 
 function revokeToken($token) {
-
 	global $config;
 
 	$curl = curl_init();
@@ -48,8 +48,9 @@ function revokeToken($token) {
 	curl_close($curl);
 
 	if ($err) {
-	  echo "cURL Error #:" . $err;
+		echo "cURL Error #:" . $err;
+		echo "<p>the response is: " . json_encode($response);
 	} else {
-		// echo "<p>the response is: " . $response;
+		// echo "<p>the response is: " . json_encode($response);
 	}
 }
